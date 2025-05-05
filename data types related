@@ -1,0 +1,117 @@
+
+Sequelize is an ORM (Object Relational Mapper) for Node.js that works with SQL databases like PostgreSQL, MySQL, etc. 
+It maps JavaScript/TypeScript code to SQL tables and columns. Sequelize provides data types that you can use to define the structure of your database tables.
+
+
+// 1. STRING
+// Represents variable-length string (VARCHAR)
+name: {
+  type: DataTypes.STRING,
+}
+
+// 2. TEXT
+// Represents long text
+description: {
+  type: DataTypes.TEXT,
+}
+
+// 3. INTEGER
+// Represents whole numbers
+age: {
+  type: DataTypes.INTEGER,
+}
+
+// 4. FLOAT
+// Represents decimal numbers (e.g., 12.34)
+price: {
+  type: DataTypes.FLOAT,
+}
+
+// 5. DOUBLE
+// More accurate decimal numbers
+rating: {
+  type: DataTypes.DOUBLE,
+}
+
+// 6. DECIMAL
+// Decimal with fixed precision and scale
+salary: {
+  type: DataTypes.DECIMAL(10, 2),
+}
+
+// 7. BOOLEAN
+// True or false value
+isActive: {
+  type: DataTypes.BOOLEAN,
+}
+
+// 8. DATE
+// Date and time
+createdAt: {
+  type: DataTypes.DATE,
+}
+
+// 9. DATEONLY
+// Only date (no time)
+dob: {
+  type: DataTypes.DATEONLY,
+}
+
+// 10. UUID
+// Universally unique ID (mostly for primary keys)
+id: {
+  type: DataTypes.UUID,
+  defaultValue: DataTypes.UUIDV4,
+  primaryKey: true,
+}
+
+// 11. ENUM
+// Predefined list of values
+status: {
+  type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+}
+
+// 12. JSON
+// Raw JSON data (objects, arrays)
+metadata: {
+  type: DataTypes.JSON,
+}
+
+// 13. JSONB (PostgreSQL Only)
+// Indexed JSON data for faster queries
+preferences: {
+  type: DataTypes.JSONB,
+}
+
+// 14. ARRAY (PostgreSQL Only)
+// Array of values
+tags: {
+  type: DataTypes.ARRAY(DataTypes.STRING),
+}
+
+// 15. BLOB
+// Binary Large Object (files, images)
+avatar: {
+  type: DataTypes.BLOB,
+}
+
+// 16. TIME
+// Time only (HH:mm:ss)
+eventTime: {
+  type: DataTypes.TIME,
+}
+
+// 17. RANGE (PostgreSQL Only)
+// Range of values (e.g., 1-10)
+scoreRange: {
+  type: DataTypes.RANGE(DataTypes.INTEGER),
+}
+
+
+
+Notes:
+PostgreSQL supports: JSONB, ARRAY, RANGE
+Use UUID for unique identifiers (instead of INTEGER autoincrement)
+Use DECIMAL(10,2) for money to avoid floating-point issues
+Use TEXT for large content like blog posts
+DATEONLY is perfect for storing DOBs without time
