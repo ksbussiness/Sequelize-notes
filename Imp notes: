@@ -1,0 +1,83 @@
+
+What is a "proxy"?
+========================= >
+
+A proxy is a server that sits between the client (browser) and your Express app. It forwards requests to your app. Example: Cloudflare, Heroku, or a reverse proxy like Nginx.
+
+🚧 Problem:
+When using a proxy, Express sees the proxy’s IP as the client’s IP. Also, it may not detect if the original request was HTTPS or HTTP.
+
+app.set('trust proxy', 1);
+This tells Express:
+
+“Hey, trust the first proxy between the user and me.”
+
+“Look at special headers like X-Forwarded-For and X-Forwarded-Proto to get the real user’s IP and if they used HTTPS.”
+
+
+Proxy server importance and explanationhere:
+=================================================== >
+
+ When a request goes through a load balancer, cloud proxy, or reverse proxy before reaching your Express server, the app.set('trust proxy', 1) line is important.
+
+Let’s break it down with a simple flow chart (text version), a real-world IP example, and a clear explanation of what trust proxy does.
+
+🔁 Simple Flow Chart (Request Journey)
+nginx
+
+User Browser (IP: 123.45.67.89)
+          ↓
+Cloud Load Balancer (IP: 10.0.0.1)
+          ↓
+Your Express Server (IP: 192.168.0.2)
+The user sends a request (maybe from a mobile app or browser).
+
+The request first hits the Load Balancer (e.g., AWS ELB, Nginx, Cloudflare).
+
+Then the Load Balancer forwards the request to your Express server.
+
+💡 Real Problem Without trust proxy
+Without telling Express about the proxy:
+
+Express sees the IP as 10.0.0.1 (proxy's IP), not the real user’s IP (123.45.67.89).
+
+If you're using sessions, cookies, or security checks, things like req.secure and req.ip will be wrong.
+
+✅ Solution With app.set('trust proxy', 1)
+
+app.set('trust proxy', 1);
+Tells Express: “Trust the first proxy” (usually the load balancer).
+
+Now Express will:
+
+Use X-Forwarded-For header to know real user IP.
+
+Use X-Forwarded-Proto to know if request was made with HTTPS.
+
+Set cookies with secure: true correctly, because it knows HTTPS was used by the client.
+
+🧠 What trust proxy does:
+Feature	Without trust proxy	With trust proxy
+req.ip	Proxy IP	Real user IP
+req.secure	false	true (if HTTPS used)
+Secure cookies	Not sent	Sent correctly
+
+🧾 IP Example:
+User (real IP): 123.45.67.89
+Load Balancer adds header:
+
+X-Forwarded-For: 123.45.67.89
+X-Forwarded-Proto: https
+Then Express (with trust proxy) will read:
+
+
+req.ip => '123.45.67.89'
+req.secure => true
+📌 When to Use app.set('trust proxy', 1)
+Use it when:
+
+Your app is behind 1 proxy (most cloud environments like Heroku, AWS, Vercel).
+
+You're using HTTPS, sessions, or need the real IP.
+
+You're using secure cookies (secure: true in express-session).
