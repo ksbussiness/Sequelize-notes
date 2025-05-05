@@ -80,3 +80,314 @@ migrate	sequelize-cli db:migrate	Apply DB schema changes (migrations)
 kube-migrate	node kube-migrate.js	Custom migration for Kubernetes
 start	ts-node index.ts	Start app in dev mode using TypeScript
 
+--------------------------------------------------------------------------------------------------- --------------------------------------------------------------------------------------------------->
+
+SCOPED PACKAGES IN PROJECT :
+
+name : @manu-techmart/ss-common
+It's a scoped private NPM package, commonly used in monorepo or microservice setups to hold shared logic or utilities across multiple services.
+
+..> In JavaScript and Node.js, packages are reusable pieces of code that can be 
+included in your project using tools like npm (Node Package Manager) 
+
+..> 1. Normal Packages
+
+Normal packages are unscoped packages. These are the default type of packages and are available in the npm registry without any special prefix.
+
+Format:
+package-name
+
+.> Examples:
+
+express
+lodash
+react
+
+Installation:
+================ >
+npm install express
+
+Usage in code:
+================ >
+const express = require('express');
+
+..> 2. Scoped Packages
+Definition:
+Scoped packages are namespaced packages grouped under a particular user or organization. They start with an @ symbol.
+
+Format:
+@scope/package-name
+
+Examples:
+@angular/core → scoped under the angular organization.
+@babel/core → scoped under the babel organization.
+
+Installation:
+npm install @angular/core
+
+Usage in code:
+==================== >
+import { Component } from '@angular/core';
+✅ Advantages of Scoped Packages:
+
+Avoids naming conflicts.
+Groups related packages under an organization/user.
+Useful in monorepos or large companies.
+
+..> 3. DevDependencies Packages
+Definition:
+Packages only needed during development, not in production.
+
+Example:
+eslint, nodemon, jest
+
+Installation:
+
+npm install --save-dev nodemon
+Usage:
+Used only while developing your app.
+
+
+..> 4. Dependencies Packages
+Definition:
+Packages required to run your app (both in development and production).
+
+Example:
+express, mongoose, cors
+
+Installation:
+npm install express
+
+
+
+..> 5. Global Packages
+Definition:
+Installed globally on your system, not limited to a single project.
+
+Installation:
+
+npm install -g nodemon
+Usage:
+Used via command line (e.g., nodemon index.js)
+
+
+
+
+...> 7. Private Packages
+Definition:
+Packages not publicly available. Used internally within a company or a private project.
+
+Scope example:
+@mycompany/my-private-lib
+
+Set private in package.json:
+"private": true
+
+
+
+
+The main use of teh of this like of teh scoped packege is that we can write teh function , and 
+resuables code in one place and from we can export all these functions , constants, enums, 
+error messaes etc 
+
+And we can use them where ever we want there we can use them , like 
+ex:
+
+
+.> here in this cases we  need to wriet every where we want and we can imjport it and use in tha particular 
+folder and service aonly , if i want to use them then i need to creat ethe separate same folder liek k
+structure to use them 
+
+Old (in each service):
+// auth-service/utils/validateEmail.js
+export function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+..> code here write once , import it and use them in othere services just by simply installing this
+module and using the sercise 
+
+New (in ss-common)
+// ss-common/src/validators/email.js
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+module.exports = { validateEmail };
+And in ss-common/src/index.js:
+
+module.exports = {
+  validators: require('./validators/email'),
+  // other exports
+};
+
+📦 4. Usage in Other Services
+After you npm install @manu-techmart/ss-common in each microservice:
+// In any microservice
+const { validators } = require('@manu-techmart/ss-common');
+
+if (!validators.validateEmail(user.email)) {
+  throw new Error("Invalid email format");
+
+simple structure of the microservicess code here:
+============================================================ >
+/project-root/
+├── auth-service/
+│   ├── app.js
+│   ├── index.js
+│   ├── utils/
+│   ├── migrations/
+│   └── src/
+│       ├── controllers/
+│       ├── routes/
+│       └── models/
+├── media-service/
+├── appointment-service/
+├── ss-common/   ← This is your shared package
+│   ├── src/
+│   │   ├── validators/
+│   │   ├── constants/
+│   │   ├── helpers/
+│   │   └── index.js
+│   ├── package.json
+
+
+steps for the creation :
+===================================== >
+
+1. Create a Directory and Init the Package
+mkdir ss-common
+cd ss-common
+npm init
+
+..> In the prompts, when it asks for package name, give it in scoped format:
+@your-scope-name/ss-common
+
+
+Example:
+=============m> 
+
+@manu-techmart/ss-common
+You must use a valid scope, typically your organization, team, or project name.
+
+
+ Decide if It’s Private or Public
+In package.json, add:
+
+If it's private:
+{
+  "name": "@manu-techmart/ss-common",
+  "version": "1.0.0",
+  "private": false,
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
+---------------------------------------------- >
+
+
+If it's public:
+{
+  "name": "@manu-techmart/ss-common",
+  "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  }
+}
+
+
+
+# How Is @manu-techmart/ss-common Created? :
+
+..> This package is manually created and optionally published to a private npm registry 
+(like GitHub Packages, Verdaccio, or npm with --access=restricted).
+
+package.json in ss-common:
+
+{
+  "name": "@manu-techmart/ss-common",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "private": false
+}
+
+
+If you cannot see a local ss-common/ folder but you're using:
+
+js
+Copy code
+import { something } from '@manu-techmart/ss-common';
+✅ Here's What Is Likely Happening:
+Your scoped package @manu-techmart/ss-common is:
+
+🔄 Not part of your local monorepo — it's a remotely hosted private/shared NPM package.
+
+🔍 So Where Is It?
+It’s stored on:
+
+Private npm registry, OR
+
+GitHub Packages, OR
+
+GitLab/npm enterprise registry, OR
+
+Verdaccio (self-hosted npm)
+
+Your project uses it just like any other npm package — but from a private source.
+
+🔧 How Can You Confirm This?
+Check your package.json in auth-service, media-service, etc. You will see:
+
+json
+Copy code
+"@manu-techmart/ss-common": "1.0.5" // or "latest" or specific version
+Check your .npmrc file (in project root or user root ~/.npmrc). It might contain:
+
+less
+Copy code
+@manu-techmart:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=XXXXXX
+Run:
+
+bash
+Copy code
+npm list @manu-techmart/ss-common
+This will show you the path to the installed module, which will be under:
+
+node_modules/@manu-techmart/ss-common
+Open this directory:
+
+node_modules/@manu-techmart/ss-common
+Here you will find:
+
+src/validators
+
+src/helpers
+
+index.js
+
+Maybe even dist/, lib/, or build/ folders
+
+All exported functions
+
+🤔 Why You Don't See ss-common as a Folder Locally?
+Because it's not developed inside your monorepo — it's developed and maintained separately, and then:
+
+Published using npm publish
+
+Installed into all microservices using npm install @manu-techmart/ss-common
+
+✅ Can You Use Your Own Functions in It?
+Yes, if you have access to that package’s repo (like on GitHub or GitLab), you can:
+
+Clone or access the ss-common source repo.
+
+Add your function (e.g., validateOtp, parseJWT, etc.).
+
+Export it from index.js or structured properly.
+
+Run npm version patch (or minor).
+
+Run npm publish.
+In your service, run:
+npm i @manu-techmart/ss-common@latest --save-exact
