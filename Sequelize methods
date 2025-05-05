@@ -1,0 +1,131 @@
+Model Definition Methods
+These define the structure of your database tables.
+
+Method	Description
+sequelize.define()	Defines a new model (table) in Sequelize.
+Example: sequelize.define('User', { name: Sequelize.STRING })
+
+Model.init()	Alternative way to initialize a model (preferred with ES6 classes).
+
+Model.sync()	Creates the table in DB if it doesn’t exist.
+Model.sync({ force: true }) drops and recreates the table.
+
+sequelize.sync()	Syncs all defined models at once.
+Model.drop()	Deletes the table from the DB.
+sequelize.authenticate()	Tests DB connection.
+sequelize.close()	Closes DB connection.
+
+📋 2. CRUD Methods
+🟩 Create
+Method	Description
+Model.create()	Creates a single row.
+User.create({ name: 'John' })
+Model.bulkCreate()	Creates multiple records in one go.
+Model.build()	Creates an instance (without saving). Use .save() to persist.
+
+🟨 Read
+Method	Description
+Model.findAll()	Fetches multiple records. Can use where, order, limit etc.
+Model.findOne()	Returns the first match or null.
+Model.findByPk()	Finds by primary key.
+Model.findAndCountAll()	Useful for pagination: returns both count and data.
+Model.count()	Returns count matching criteria.
+Model.max(), Model.min(), Model.sum()	Aggregate functions on a column.
+
+🟥 Update
+Method	Description
+Model.update()	Updates records matching where. Returns number of affected rows.
+instance.save()	Saves changes to an instance.
+instance.update()	Updates instance properties.
+
+🗑️ Delete
+Method	Description
+Model.destroy()	Deletes records matching condition.
+instance.destroy()	Deletes specific instance.
+Model.truncate()	Deletes all data from the table.
+
+🔗 3. Association Methods
+Used when you define relations between models.
+
+Method	Description
+Model.hasOne()	One-to-One. Example: User.hasOne(Profile)
+Model.belongsTo()	The other side of hasOne or hasMany.
+Model.hasMany()	One-to-Many. Example: User.hasMany(Posts)
+Model.belongsToMany()	Many-to-Many using a junction table.
+Model.getAssociations()	Gets associated instances.
+Model.setAssociation()	Sets an associated instance.
+Model.addAssociation()	Adds an association.
+Model.removeAssociation()	Removes association.
+
+🔍 4. Query Options
+These are not methods, but objects passed into methods like findAll, update, destroy.
+
+Option	Description
+where	Filters records. Example: { where: { name: 'John' } }
+attributes	Select specific columns.
+order	Sorting. Example: order: [['createdAt', 'DESC']]
+limit	Limit number of results.
+offset	For pagination.
+include	Used to fetch related models (associations).
+
+🧰 5. Instance Methods
+Operate on single rows (instances).
+
+Method	Description
+instance.save()	Saves changes to DB.
+instance.reload()	Reloads the instance from DB.
+instance.update()	Updates instance values.
+instance.destroy()	Deletes this instance.
+instance.increment() / decrement()	Changes numeric fields.
+instance.toJSON()	Converts instance to plain JSON.
+
+🧠 6. Transaction Methods
+Used for grouping queries into a single atomic unit.
+
+Method	Description
+sequelize.transaction()	Runs multiple operations in a transaction block.
+Example:
+js<br>sequelize.transaction(async (t) => {<br> await User.create({...}, { transaction: t });<br> await Profile.create({...}, { transaction: t });<br>});<br>
+
+🔐 7. Query Interface Methods (Advanced DB control)
+sequelize.getQueryInterface() gives low-level access.
+
+Method	Description
+queryInterface.createTable()	Programmatically create a table.
+queryInterface.dropTable()	Drop a table manually.
+queryInterface.addColumn() / removeColumn()	Modify table structure.
+queryInterface.renameColumn()	Rename a column.
+
+💬 8. Raw Queries
+When Sequelize's ORM is not enough.
+
+Method	Description
+sequelize.query()	Run raw SQL. Returns result & metadata.
+Example:
+sequelize.query("SELECT * FROM Users")
+
+📦 9. Scopes and Validators
+Add logic and constraints to models.
+
+Method	Description
+defaultScope	Default query behavior.
+scopes	Define reusable query snippets.
+validate	Add custom model-level validations.
+
+🛠️ 10. Miscellaneous
+Method	Description
+Model.rawAttributes	Access raw model schema.
+sequelize.literal()	Use raw SQL expressions.
+sequelize.fn()	Call SQL functions.
+sequelize.col()	Reference column name.
+
+
+
+
+
+
+
+
+
+
+
