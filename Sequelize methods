@@ -120,8 +120,35 @@ sequelize.fn()	Call SQL functions.
 sequelize.col()	Reference column name.
 
 
+what is the paranoid in teh sequelize in simple terms here:
+================================================================== >
 
+When you set:
 
+paranoid: true
+It means:
+
+🔄 Don't delete the record permanently from the database — instead, just mark it as deleted by setting the deletedAt field.
+
+🧠 Without paranoid: true:
+User.destroy({ where: { id: 1 } });
+➡️ The user record is permanently deleted from the database.
+
+🧠 With paranoid: true:
+User.destroy({ where: { id: 1 } });
+➡️ The record is not actually deleted — Sequelize sets deletedAt timestamp instead.
+
+📦 Example Model with paranoid:
+sequelize.define('User', {
+  name: DataTypes.STRING,
+}, {
+  paranoid: true, // Enables soft delete
+  timestamps: true, // createdAt, updatedAt, and deletedAt
+});
+When calling findAll(), soft-deleted rows will be excluded automatically.
+
+🔎 You Can Still Query Deleted Records:
+User.findAll({ paranoid: false }); // This will include deleted records
 
 
 
