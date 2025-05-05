@@ -1,0 +1,145 @@
+reference purpose here:
+=========================== >
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *         name:
+ *           type: string
+ *         bio:
+ *           type: string
+ *         age:
+ *           type: integer
+ *         rating:
+ *           type: number
+ *           format: float
+ *         dob:
+ *           type: string
+ *           format: date
+ *         isActive:
+ *           type: boolean
+ *         status:
+ *           type: string
+ *           enum: [active, inactive]
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: string
+ *         metadata:
+ *           type: object
+ *         preferences:
+ *           type: object
+ *         profilePhoto:
+ *           type: string
+ *           format: binary
+ *         resumePDF:
+ *           type: string
+ *           format: binary
+ */
+
+/**
+ * @swagger
+ * /user/register:
+ *   post:
+ *     summary: Register a new user with files and info
+ *     consumes:
+ *       - multipart/form-data
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - age
+ *               - profilePhoto
+ *               - resumePDF
+ *             properties:
+ *               name:
+ *                 type: string
+ *               bio:
+ *                 type: string
+ *               age:
+ *                 type: integer
+ *               rating:
+ *                 type: number
+ *               dob:
+ *                 type: string
+ *                 format: date
+ *               isActive:
+ *                 type: boolean
+ *               status:
+ *                 type: string
+ *                 enum: [active, inactive]
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               metadata:
+ *                 type: object
+ *               preferences:
+ *                 type: object
+ *               profilePhoto:
+ *                 type: string
+ *                 format: binary
+ *               resumePDF:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: User created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ */
+
+/**
+ * @swagger
+ * /user/{id}:
+ *   get:
+ *     summary: Get user by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: UUID of the user
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Bearer token
+ *     responses:
+ *       200:
+ *         description: User fetched
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ */
+
+import express from 'express';
+const router = express.Router();
+
+router.post('/user/register', (req, res) => {
+  // Handle multer files & body fields
+  res.status(201).json({ message: 'User registered' });
+});
+
+router.get('/user/:id', (req, res) => {
+  res.status(200).json({ message: 'User details' });
+});
+
+module.exports = router;
