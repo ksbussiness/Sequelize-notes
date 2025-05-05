@@ -150,7 +150,73 @@ When calling findAll(), soft-deleted rows will be excluded automatically.
 🔎 You Can Still Query Deleted Records:
 User.findAll({ paranoid: false }); // This will include deleted records
 
+example :
+What is AppointmentModel?
+This is a Sequelize Model, which means it represents a table in your database called Appointments.
 
+Each property in this model becomes a column in the database.
+
+🧰 Why are we using a class here?
+Using a class that extends Model:
+
+ts
+Copy code
+class AppointmentModel extends Model { ... }
+✅ Benefits:
+Gives you structure to define your data.
+
+Allows you to use TypeScript typings (e.g., id?: string) for auto-complete and validation.
+
+You can customize behavior later using class methods.
+
+🧱 What happens inside .init()?
+This is where you tell Sequelize what the table should look like.
+
+Example:
+
+ts
+Copy code
+AppointmentModel.init({
+  id: {
+    type: DataTypes.UUID,     // UUID type (like a unique ID)
+    primaryKey: true,         // Primary key of the table
+    allowNull: false,         // Cannot be null
+    defaultValue: DataTypes.UUIDV4 // Auto-generate a UUID
+  },
+  date: {
+    type: DataTypes.DATEONLY, // Only a date (no time)
+    allowNull: true,          // This can be null
+    defaultValue: null
+  }
+  // ...more columns
+});
+So this line by line defines how each column in the table should be set up.
+
+🔗 What is this line doing?
+ts
+Copy code
+AppointmentModel.belongsTo(TaskTypeModel, { foreignKey: 'type_id' })
+✅ Meaning:
+AppointmentModel has a column called type_id.
+
+That type_id connects to the TaskTypeModel table (like a foreign key).
+
+So each appointment is linked to a type of task.
+
+In simple words:
+An appointment is related to a task type using type_id.
+
+🔗 What about this?
+ts
+Copy code
+ProjectModel.hasMany(AppointmentModel, { foreignKey: 'project_id', as: 'appointments' })
+✅ Meaning:
+One Project can have many Appointments.
+
+The link is made through the project_id column in the appointment table.
+
+In simple words:
+A project can have multiple appointments attached to it.
 
 
 
