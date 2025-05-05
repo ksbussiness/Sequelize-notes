@@ -1,0 +1,82 @@
+"scripts": {
+  "build": "tsc",
+  "migrate": "npx sequelize-cli db:migrate",
+  "kube-migrate": "node kube-migrate.js",
+  "start": "ts-node index.ts"
+}
+
+🔧 1. "build": "tsc"
+➤ What it does:
+Runs the TypeScript Compiler (tsc)
+
+Converts all your .ts (TypeScript) files into .js (JavaScript) files
+
+➤ Why it’s used:
+In production, Node.js runs .js files, not .ts
+
+So before deployment, you build your code using tsc
+
+💡 Example:
+If you have src/app.ts, after running npm run build, it generates dist/app.js
+------------------------------------------------------------------------------------------------- >
+
+📦 2. "migrate": "npx sequelize-cli db:migrate"
+➤ What it does:
+Runs Sequelize's database migration command
+
+Applies all migration files in your migrations folder to update the database schema
+
+➤ Why it’s used:
+When your app needs to create/update tables, you run this script
+
+This keeps your database structure in sync with your models
+
+💡 Example:
+Creates Users, Orders, or Products tables with the structure you defined
+-------------------------------------------------------------------------------------------------- >
+
+☁️ 3. "kube-migrate": "node kube-migrate.js"
+➤ What it does:
+Runs a custom JS file named kube-migrate.js using Node.js
+
+This is probably related to Kubernetes or a cloud deployment script
+
+➤ Why it’s used:
+Custom script to handle migration logic for Kubernetes
+
+Maybe it's checking DB readiness or doing extra logic during deployment
+
+💡 Example:
+// kube-migrate.js
+const { exec } = require('child_process');
+exec("npx sequelize-cli db:migrate");
+This could run db:migrate inside a Kubernetes container.
+
+------------------------------------------------------------------------------------------------------------- >
+
+🚀 4. "start": "ts-node index.ts"
+➤ What it does:
+Starts your app using ts-node
+
+ts-node allows running TypeScript files directly (without compiling first)
+
+➤ Why it’s used:
+Helpful during development because you can instantly run .ts files
+
+No need to build every time you change something
+
+💡 Example:
+Runs your main server file index.ts, which likely includes:
+
+import express from 'express';
+const app = express();
+app.listen(3000, () => console.log('Server running'));
+--------------------------------------------------------------------------------------------------- >
+✅ Summary Table:
+
+Script Name	What It Runs	Purpose / Use Case
+build	tsc	Convert TypeScript to JavaScript
+migrate	sequelize-cli db:migrate	Apply DB schema changes (migrations)
+kube-migrate	node kube-migrate.js	Custom migration for Kubernetes
+start	ts-node index.ts	Start app in dev mode using TypeScript
+
